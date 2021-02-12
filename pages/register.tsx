@@ -1,9 +1,11 @@
 import Head from "next/head";
 import Link from "next/link";
+import router from "next/router";
 import Axios from "axios";
 import { FormEvent, useState } from "react";
-import classNames from "classnames";
+
 import InputGroup from "../componets/InputGroup";
+import { route } from "next/dist/next-server/server/router";
 
 export default function Home() {
   const [email, setEmail] = useState<string>("");
@@ -15,15 +17,21 @@ export default function Home() {
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
 
+    if (!agreement) {
+      setErrors({
+        ...errors,
+        agreement: "You must agree to Terms & Conditions",
+      });
+      return;
+    }
     try {
-      const res = await Axios.post("/auth/register", {
+      await Axios.post("/auth/register", {
         email,
         password,
         username,
       });
-      console.log(res.data);
+      router.push("/login");
     } catch (err) {
-      console.log(err);
       setErrors(err.response.data);
     }
   };
@@ -60,7 +68,11 @@ export default function Home() {
               <label htmlFor="agreement" className="text-xs cursor-pointer">
                 I agree to get emails about cool stuff on Reddit
               </label>
+              <small className="block font-medium text-red-600">
+                {errors.agreement}
+              </small>
             </div>
+
             <InputGroup
               type="email"
               placeholder="EMAIL"
