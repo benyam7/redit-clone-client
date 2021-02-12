@@ -6,30 +6,20 @@ import { FormEvent, useState } from "react";
 
 import InputGroup from "../componets/InputGroup";
 
-export default function Register() {
-  const [email, setEmail] = useState<string>("");
+export default function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [agreement, setAgreement] = useState<boolean>(false);
   const [errors, setErrors] = useState<any>({});
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
 
-    if (!agreement) {
-      setErrors({
-        ...errors,
-        agreement: "You must agree to Terms & Conditions",
-      });
-      return;
-    }
     try {
-      await Axios.post("/auth/register", {
-        email,
+      await Axios.post("/auth/login", {
         password,
         username,
       });
-      router.push("/login");
+      router.push("/");
     } catch (err) {
       setErrors(err.response.data);
     }
@@ -38,7 +28,7 @@ export default function Register() {
   return (
     <div className="flex">
       <Head>
-        <title>Register</title>
+        <title>Login</title>
       </Head>
 
       <div
@@ -55,31 +45,9 @@ export default function Register() {
           </p>
 
           <form onSubmit={submitForm}>
-            <div className="mb-6">
-              <input
-                type="checkbox"
-                className="mr-1 cursor-pointer"
-                id="agreement"
-                checked={agreement}
-                onChange={(e) => setAgreement(e.target.checked)}
-              />
-              <label htmlFor="agreement" className="text-xs cursor-pointer">
-                I agree to get emails about cool stuff on Reddit
-              </label>
-              <small className="block font-medium text-red-600">
-                {errors.agreement}
-              </small>
-            </div>
-
-            <InputGroup
-              type="email"
-              placeholder="EMAIL"
-              className="mb-2"
-              value={email}
-              setValue={setEmail}
-              error={errors.email}
-            />
-
+            <small className="block font-medium text-red-600">
+              {errors.error}
+            </small>
             <InputGroup
               type="text"
               placeholder="USERNAME"
@@ -99,13 +67,13 @@ export default function Register() {
             />
 
             <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase transition duration-200 bg-blue-500 border border-blue-500 rounded">
-              Sign Up
+              Log in
             </button>
           </form>
 
           <small>
-            Already a redditor?
-            <Link href="/login">
+            New to Reddit?
+            <Link href="/signup">
               <a className="ml-1 text-blue-500 uppercase">Log In</a>
             </Link>
           </small>
