@@ -26,7 +26,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex bg-white">
       <Head>
         <title>Login</title>
       </Head>
@@ -38,7 +38,7 @@ export default function Login() {
 
       <div className="flex flex-col justify-center pl-6">
         <div className="w-70">
-          <h1 className="mb-2 text-lg font-medium">Sign up</h1>
+          <h1 className="mb-2 text-lg font-medium">Log in</h1>
 
           <p className="mb-10 text-xs">
             By continuing, you agree to our User Agreement and Privacy Policy
@@ -73,8 +73,8 @@ export default function Login() {
 
           <small>
             New to Reddit?
-            <Link href="/signup">
-              <a className="ml-1 text-blue-500 uppercase">Log In</a>
+            <Link href="/register">
+              <a className="ml-1 text-blue-500 uppercase">Sign up</a>
             </Link>
           </small>
         </div>

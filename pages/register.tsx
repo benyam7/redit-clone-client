@@ -36,7 +36,7 @@ export default function Register() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex bg-white">
       <Head>
         <title>Register</title>
       </Head>
@@ -55,7 +55,7 @@ export default function Register() {
           </p>
 
           <form onSubmit={submitForm}>
-            <div className="mb-6">
+            <div className="flex items-center mb-6">
               <input
                 type="checkbox"
                 className="mr-1 cursor-pointer"
