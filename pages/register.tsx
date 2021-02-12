@@ -10,7 +10,7 @@ export default function Home() {
       </Head>
 
       <div
-        className="w-40 h-screen bg-right bg-cover"
+        className="h-screen bg-right bg-cover w-36"
         style={{ backgroundImage: "url('/images/squares.jpg')" }}
       ></div>
 
@@ -38,7 +38,7 @@ export default function Home() {
               <input
                 type="text"
                 placeholder="Username"
-                className="w-full px-3 py-2 bg-gray-100 border border-gray-400 rounded"
+                className="w-full p-3 border border-gray-300 rounded outline-none focus:bg-white hover:bg-white bg-gray-50"
               />
             </div>
 
@@ -46,7 +46,7 @@ export default function Home() {
               <input
                 type="password"
                 placeholder="Password"
-                className="w-full px-3 py-2 bg-gray-100 border border-gray-400 rounded"
+                className="w-full p-3 transition duration-200 border border-gray-300 rounded outline-none focus:bg-white hover:bg-white bg-gray-50"
               />
             </div>
 
@@ -54,11 +54,11 @@ export default function Home() {
               <input
                 type="email"
                 placeholder="Email"
-                className="w-full px-3 py-2 bg-gray-100 border border-gray-400 rounded"
+                className="w-full p-3 transition duration-200 border border-gray-300 rounded outline-none focus:bg-white hover:bg-white bg-gray-50"
               />
             </div>
 
-            <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-500 border border-blue-500 rounded">
+            <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase transition duration-200 bg-blue-500 border border-blue-500 rounded">
               Sign Up
             </button>
           </form>
