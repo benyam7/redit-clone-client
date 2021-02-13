@@ -3,7 +3,10 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import { Post } from "../types";
 import Link from "next/link";
-import React, { Fragment } from "react";
+import { Fragment } from "react";
+import classNames from "classnames";
+
+import Axios from "axios";
 
 dayjs.extend(relativeTime);
 
@@ -19,52 +22,102 @@ const ActionButton = ({ children }) => {
   );
 };
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard = ({
+  post: {
+    identitfier,
+    slug,
+    title,
+    body,
+    subName,
+    createdAt,
+    voteScore,
+    userVote,
+    commentCount,
+    url,
+    username,
+  },
+}: PostCardProps) => {
+  const vote = async (value) => {
+    try {
+      const res = await Axios.post("/misc/vote/", {
+        identitfier,
+        slug,
+        value,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
-    <div key={post.identitfier} className="flex mb-4 bg-white rounded">
+    <div key={identitfier} className="flex mb-4 bg-white rounded">
       {/* vote */}
-      <div className="w-10 text-center bg-gray-200 rounded-l">
-        <p>V</p>
+      <div className="w-10 py-3 text-center bg-gray-200 rounded-l">
+        {/* upvote */}
+        <div
+          onClick={() => vote(1)}
+          className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-red-500"
+        >
+          <i
+            className={classNames("icon-arrow-up", {
+              "text-red-500": userVote === 1,
+            })}
+          ></i>
+        </div>
+        {/* score */}
+        <p className="text-xs font-bold">{voteScore}</p>
+        {/* downvote */}
+        <div
+          onClick={() => vote(-1)}
+          className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-600"
+        >
+          <i
+            className={classNames("icon-arrow-down", {
+              "text-blue-500": userVote === -1,
+            })}
+          ></i>
+        </div>
       </div>
       {/* data */}
       <div className="w-full p-2">
         <div className="flex items-center">
-          <Link href={`/r/${post.subName}`}>
+          <Link href={`/r/${subName}`}>
             <Fragment>
               <img
                 className="w-6 h-6 mr-1 rounded-full cursor-pointer"
                 src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
               />
               <a className="text-xs font-bold cursor-pointer hover:underline">
-                /r/{post.subName}
+                /r/{subName}
               </a>
             </Fragment>
           </Link>
 
           <p className="text-xs text-gray-500">
-            <span className="mx-1">•</span>Posted by
-            <Link href={`/u/${post.username}`}>
-              <a className="mx-1 hover:underline">/u/{post.username}</a>
+            <span className="mx-1">•</span>d by
+            <Link href={`/u/${username}`}>
+              <a className="mx-1 hover:underline">/u/{username}</a>
             </Link>
-            <Link href={post.url}>
+            <Link href={url}>
               <a className="mx-1 hover:underline">
-                {dayjs(post.createdAt).fromNow()}
+                {dayjs(createdAt).fromNow()}
               </a>
             </Link>
           </p>
         </div>
-        <Link href={post.url}>
-          <a className="my-1 text-lg font-medium">{post.title}</a>
+        <Link href={url}>
+          <a className="my-1 text-lg font-medium">{title}</a>
         </Link>
 
-        {post.body && <p className="my-1 text-sm ">{post.body}</p>}
+        {body && <p className="my-1 text-sm ">{body}</p>}
 
         <div className="flex">
-          <Link href={post.url}>
+          <Link href={url}>
             <a>
               <ActionButton>
                 <i className="fas fa-comment-alt fa-xs">
-                  <span className="ml-1 font-bold">20 comments</span>
+                  <span className="ml-1 font-bold">
+                    {commentCount} Comments
+                  </span>
                 </i>
               </ActionButton>
             </a>

@@ -3,6 +3,8 @@ import Axios from "axios";
 import { useRouter } from "next/router";
 
 import "../styles/tailwind.css";
+import "../styles/icons.css";
+
 import "../componets/Navbar";
 import { Fragment } from "react";
 import Navbar from "../componets/Navbar";

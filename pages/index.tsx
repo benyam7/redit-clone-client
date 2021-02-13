@@ -3,10 +3,10 @@ import Axios from "axios";
 import { useState, useEffect, Fragment } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-
+import classNames from "classnames";
 import { Post } from "../types";
-import Link from "next/link";
 import PostCard from "../componets/PostCard";
+
 // import { GetServerSideProps } from "next";
 
 dayjs.extend(relativeTime);
