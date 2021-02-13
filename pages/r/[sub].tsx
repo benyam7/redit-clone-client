@@ -1,18 +1,32 @@
 import { route } from "next/dist/next-server/server/router";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Fragment } from "react";
+import { createRef, Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import useSWR from "swr";
+import classNames from "classnames";
 import PostCard from "../../componets/PostCard";
 import { Sub } from "../../types";
+import { useAuthState } from "../../context/auth";
 
 export default function SubPage() {
+  // local state
+  const [ownSub, setOwnSub] = useState(false);
+
+  // golobal state
+  const { authenticated, user } = useAuthState();
+  // utils
+  const fileInputRef = createRef<HTMLInputElement>();
   const router = useRouter();
 
   const subName = router.query.sub;
 
   const { data: sub, error } = useSWR<Sub>(subName ? `/subs/${subName}` : null);
+
+  useEffect(() => {
+    if (!sub) return;
+    setOwnSub(authenticated && user.username === sub.username);
+  }, [sub]);
 
   let postsMarkup;
   if (!sub) {
@@ -36,10 +50,15 @@ export default function SubPage() {
 
       {sub && (
         <Fragment>
+          <input type="file" hidden={true} ref={fileInputRef} />
           {/* sub and images */}
           <div>
             {/* banner img */}
-            <div className="bg-blue-500">
+            <div
+              className={classNames("bg-blue-500", {
+                "cursor-pointer": ownSub,
+              })}
+            >
               {sub.bannerUrl ? (
                 <div
                   className="h-56 bg-blue-500"
@@ -61,7 +80,9 @@ export default function SubPage() {
                   <Image
                     src={sub.imageUrl}
                     alt="Sub "
-                    className="rounded-full"
+                    className={classNames("rounded-full", {
+                      "cursor-pointer": ownSub,
+                    })}
                     width={70}
                     height={70}
                   />
