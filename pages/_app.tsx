@@ -1,6 +1,6 @@
 import { AppProps } from "next/app";
 import Axios from "axios";
-
+import { SWRConfig } from "swr";
 import { useRouter } from "next/router";
 
 import "../styles/tailwind.css";
@@ -20,9 +20,16 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const authRoute = authRoutes.includes(pathname);
 
   return (
-    <AuthProvider>
-      {!authRoute && <Navbar />}
-      <Component {...pageProps} />;
-    </AuthProvider>
+    <SWRConfig
+      value={{
+        fetcher: (url) => Axios.get(url).then((res) => res.data),
+        dedupingInterval: 5000,
+      }}
+    >
+      <AuthProvider>
+        {!authRoute && <Navbar />}
+        <Component {...pageProps} />;
+      </AuthProvider>
+    </SWRConfig>
   );
 }

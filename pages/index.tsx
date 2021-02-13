@@ -6,18 +6,21 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import { Post } from "../types";
 import PostCard from "../componets/PostCard";
+import useSWR from "swr";
 
 // import { GetServerSideProps } from "next";
 
 dayjs.extend(relativeTime);
 
 export default function Home(/* { posts } */) {
-  const [posts, setPosts] = useState<Post[]>([]);
-  useEffect(() => {
-    Axios.get("/posts")
-      .then((res) => setPosts(res.data))
-      .catch((err) => console.log(err));
-  }, []);
+  // const [posts, setPosts] = useState<Post[]>([]);
+  // useEffect(() => {
+  //   Axios.get("/posts")
+  //     .then((res) => setPosts(res.data))
+  //     .catch((err) => console.log(err));
+  // }, []);
+
+  const { data: posts } = useSWR("/posts");
 
   return (
     <div className="pt-12">
@@ -29,7 +32,7 @@ export default function Home(/* { posts } */) {
       <div className="container flex w-full pt-4 mx-auto">
         {/* posts */}
         <div className="w-3/5">
-          {posts.map((post) => (
+          {posts?.map((post) => (
             <PostCard post={post} key={post.identitfier} />
           ))}
         </div>
