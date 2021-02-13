@@ -1,13 +1,16 @@
 import { route } from "next/dist/next-server/server/router";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { createRef, Fragment, useEffect, useState } from "react";
+import { ChangeEvent, createRef, Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import useSWR from "swr";
+import Axios from "axios";
+
 import classNames from "classnames";
 import PostCard from "../../componets/PostCard";
 import { Sub } from "../../types";
 import { useAuthState } from "../../context/auth";
+import { type } from "os";
 
 export default function SubPage() {
   // local state
@@ -21,7 +24,9 @@ export default function SubPage() {
 
   const subName = router.query.sub;
 
-  const { data: sub, error } = useSWR<Sub>(subName ? `/subs/${subName}` : null);
+  const { data: sub, error, revalidate } = useSWR<Sub>(
+    subName ? `/subs/${subName}` : null
+  );
 
   useEffect(() => {
     if (!sub) return;
@@ -41,6 +46,32 @@ export default function SubPage() {
     ));
   }
 
+  const openFileInput = (type: string) => {
+    if (!ownSub) return;
+    fileInputRef.current.name = type;
+    fileInputRef.current.click();
+  };
+
+  const uploadImage = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files[0];
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", fileInputRef.current.name);
+
+    try {
+      await Axios.post<Sub>(`/subs/${sub.name}/image`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      revalidate();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   if (error) router.push("/");
   return (
     <div>
@@ -50,7 +81,12 @@ export default function SubPage() {
 
       {sub && (
         <Fragment>
-          <input type="file" hidden={true} ref={fileInputRef} />
+          <input
+            type="file"
+            hidden={true}
+            ref={fileInputRef}
+            onChange={uploadImage}
+          />
           {/* sub and images */}
           <div>
             {/* banner img */}
@@ -58,6 +94,7 @@ export default function SubPage() {
               className={classNames("bg-blue-500", {
                 "cursor-pointer": ownSub,
               })}
+              onClick={() => openFileInput("banner")}
             >
               {sub.bannerUrl ? (
                 <div
@@ -85,6 +122,7 @@ export default function SubPage() {
                     })}
                     width={70}
                     height={70}
+                    onClick={() => openFileInput("image")}
                   />
                 </div>
 
