@@ -1,10 +1,25 @@
 import Link from "next/link";
 
 import RedditLogo from "../public/images/reddit.svg";
+import { useAuthState, useAuthDispatch } from "../context/auth";
+import React, { Fragment } from "react";
+import Axios from "axios";
 
 export interface Props {}
 
 const Navbar: React.FC = () => {
+  const { authenticated, loading } = useAuthState();
+  const dispatch = useAuthDispatch();
+  const logout = () => {
+    Axios.get("/auth/logout")
+      .then(() => {
+        dispatch("LOGOUT");
+
+        window.location.reload();
+      })
+      .catch((err) => console.log(err)).finally;
+  };
+
   return (
     <div className="fixed inset-x-0 top-0 z-10 flex items-center justify-center h-12 px-5 bg-white">
       {/* logo n title */}
@@ -32,13 +47,28 @@ const Navbar: React.FC = () => {
       {/* auth */}
 
       <div className="flex">
-        <Link href="/login">
-          <a className="w-32 py-1 mr-5 leading-5 hollow blue button">Log in</a>
-        </Link>
+        {!loading &&
+          (authenticated ? (
+            // logout
+            <button
+              onClick={() => logout()}
+              className="w-32 py-1 mr-5 leading-5 hollow blue button"
+            >
+              Logout
+            </button>
+          ) : (
+            <Fragment>
+              <Link href="/login">
+                <a className="w-32 py-1 mr-5 leading-5 hollow blue button">
+                  Log in
+                </a>
+              </Link>
 
-        <Link href="/login">
-          <a className="w-32 py-1 leading-5 blue button">Sign up</a>
-        </Link>
+              <Link href="/login">
+                <a className="w-32 py-1 leading-5 blue button">Sign up</a>
+              </Link>
+            </Fragment>
+          ))}
       </div>
     </div>
   );
