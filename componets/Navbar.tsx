@@ -6,7 +6,7 @@ export interface Props {}
 
 const Navbar: React.FC = () => {
   return (
-    <div className="fixed inset-x-0 top-0 z-10 flex items-center justify-center px-5 bg-white h12">
+    <div className="fixed inset-x-0 top-0 z-10 flex items-center justify-center h-12 px-5 bg-white">
       {/* logo n title */}
       <div className="flex items-center">
         <Link href="/">
