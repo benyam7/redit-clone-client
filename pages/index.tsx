@@ -9,6 +9,7 @@ import PostCard from "../componets/PostCard";
 import useSWR from "swr";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuthState } from "../context/auth";
 
 // import { GetServerSideProps } from "next";
 
@@ -25,6 +26,7 @@ export default function Home(/* { posts } */) {
   const { data: posts } = useSWR<Post[]>("/posts");
   const { data: topSubs } = useSWR<Sub[]>("/misc/top-subs");
 
+  const { authenticated } = useAuthState();
   return (
     <Fragment>
       <Head>
@@ -75,6 +77,15 @@ export default function Home(/* { posts } */) {
                 );
               })}
             </div>
+            {authenticated && (
+              <div className="p-4 border-t-2">
+                <Link href="/subs/create">
+                  <a className="w-full px-2 py-1 blue button">
+                    Create Community
+                  </a>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
