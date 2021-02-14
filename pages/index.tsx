@@ -34,15 +34,15 @@ export default function Home(/* { posts } */) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="container flex w-full pt-4 mx-auto">
+      <div className="container flex w-full pt-4 mx-auto ">
         {/* posts */}
-        <div className="w-3/5">
+        <div className="w-full px-4 md:w-3/5 md:p-0">
           {posts?.map((post) => (
             <PostCard post={post} key={post.identitfier} />
           ))}
         </div>
         {/* sidebar */}
-        <div className="ml-6 w-80">
+        <div className="hidden ml-6 md:block w-80">
           <div className="bg-white rounded">
             <div className="p-4 border-b-2">
               <p className="text-lg font-semibold text-center">

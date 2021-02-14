@@ -58,7 +58,7 @@ const Navbar: React.FC = () => {
     setsubName("");
   };
   return (
-    <div className="fixed inset-x-0 top-0 z-10 flex items-center justify-center h-12 px-5 bg-white">
+    <div className="fixed inset-x-0 top-0 z-10 flex items-center justify-between h-12 px-5 bg-white">
       {/* logo n title */}
       <div className="flex items-center">
         <Link href="/">
@@ -66,45 +66,47 @@ const Navbar: React.FC = () => {
             <RedditLogo className="w-8 h-8 mr-2" />
           </a>
         </Link>
-        <span className="text-2xl font-semibold">
+        <span className="hidden text-2xl font-semibold lg:block">
           <Link href="/">reddit</Link>
         </span>
       </div>
       {/* search */}
-
-      <div className="relative flex items-center mx-auto bg-gray-100 border rounded hover:border-blue-500 hover:bg-white">
-        <i className="pl-3 pr-3 text-gray-500 fas fa-search"></i>
-        <input
-          placeholder="SEARCH"
-          type="text"
-          value={subName}
-          onChange={(e) => setsubName(e.target.value)}
-          className="pl-2.5 py-1 pr-3 rounded  bg-transparent w-96 focus:outline-none"
-        />
-        <div
-          style={{ top: "100%" }}
-          className="absolute left-0 right-0 bg-white"
-        >
-          {subs?.map((sub) => (
-            <div
-              onClick={() => goToSub(sub.name)}
-              className="flex items-center px-4 py-3 cursor-pointer hover:bg-gray-200"
-            >
-              <Image
-                src={sub.imageUrl}
-                alt="Sub"
-                className="rounded-full"
-                height={(8 * 16) / 4}
-                width={(8 * 16) / 4}
-              />
-              <div className="ml-4 text-sm">
-                <p className="font-medium">{sub.name}</p>
-                <p className="text-gray-600">{sub.title}</p>
+      <div className="max-w-full px-4 lg:w-6/12">
+        <div className="relative flex items-center bg-gray-100 border rounded hover:border-blue-500 hover:bg-white">
+          <i className="pl-3 pr-3 text-gray-500 fas fa-search"></i>
+          <input
+            placeholder="SEARCH"
+            type="text"
+            value={subName}
+            onChange={(e) => setsubName(e.target.value)}
+            className="pl-2.5 py-1 pr-3 rounded  bg-transparent focus:outline-none"
+          />
+          <div
+            style={{ top: "100%" }}
+            className="absolute left-0 right-0 bg-white"
+          >
+            {subs?.map((sub) => (
+              <div
+                onClick={() => goToSub(sub.name)}
+                className="flex items-center px-4 py-3 cursor-pointer hover:bg-gray-200"
+              >
+                <Image
+                  src={sub.imageUrl}
+                  alt="Sub"
+                  className="rounded-full"
+                  height={(8 * 16) / 4}
+                  width={(8 * 16) / 4}
+                />
+                <div className="ml-4 text-sm">
+                  <p className="font-medium">{sub.name}</p>
+                  <p className="text-gray-600">{sub.title}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
+
       {/* auth */}
 
       <div className="flex">
@@ -113,20 +115,22 @@ const Navbar: React.FC = () => {
             // logout
             <button
               onClick={() => logout()}
-              className="w-32 py-1 mr-5 leading-5 hollow blue button"
+              className="hidden w-20 py-1 mr-5 leading-5 sm:block lg:w-32 hollow blue button"
             >
               Logout
             </button>
           ) : (
             <Fragment>
               <Link href="/login">
-                <a className="w-32 py-1 mr-5 leading-5 hollow blue button">
+                <a className="hidden w-20 py-1 mr-5 leading-5 sm:block lg:w-32 hollow blue button">
                   Log in
                 </a>
               </Link>
 
-              <Link href="/login">
-                <a className="w-32 py-1 leading-5 blue button">Sign up</a>
+              <Link href="/register">
+                <a className="hidden w-20 py-1 leading-5 sm:block lg:w-32 blue button">
+                  Sign up
+                </a>
               </Link>
             </Fragment>
           ))}
