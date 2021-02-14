@@ -12,7 +12,7 @@ import useSWR from "swr";
 import Sidebar from "../../../../componets/Sidebar";
 import { Post } from "../../../../types";
 import { useAuthState } from "../../../../context/auth";
-import React from "react";
+import React, { FormEvent, useState } from "react";
 import ActionButton from "../../../../componets/ActionButton";
 import { Comment } from "../../../../types";
 
@@ -20,8 +20,9 @@ dayjs.extend(relativeTime);
 
 export default function PostPage() {
   // local state
+  const [newComment, setNewComment] = useState("");
   // global state
-  const { authenticated } = useAuthState();
+  const { authenticated, user } = useAuthState();
 
   // utils
   const router = useRouter();
@@ -58,6 +59,19 @@ export default function PostPage() {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const submitComment = async (event: FormEvent) => {
+    event.preventDefault();
+    if (newComment.trim() === "") return;
+
+    try {
+      await Axios.post(`/posts/${post.identitfier}/${post.slug}/comments`, {
+        body: newComment,
+      });
+      setNewComment("");
+      revalidate();
+    } catch (err) {}
   };
 
   return (
@@ -171,7 +185,29 @@ export default function PostPage() {
                 {/* comment input  */}
                 <div className="pl-10 pr-6 mb-4">
                   {authenticated ? (
-                    <p>Comment input</p>
+                    <div>
+                      <p className="mb-1 text-xs">
+                        Comment as{" "}
+                        <Link href={`/u/${user.username}`}>
+                          <a className="font-semibold text-blue-500">
+                            {user.username}
+                          </a>
+                        </Link>
+                      </p>
+                      <form onSubmit={submitComment}>
+                        <textarea
+                          onChange={(e) => setNewComment(e.target.value)}
+                          className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-gray-600"
+                          value={newComment}
+                        ></textarea>
+
+                        <div className="flex justify-end">
+                          <button className="px-3 py-1 blue button">
+                            Comment
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   ) : (
                     <div className="flex items-center justify-between px-2 py-2 border border-gray-200 rounded">
                       <p className="font-semibold text-gray-400">
