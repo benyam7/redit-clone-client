@@ -99,7 +99,7 @@ const PostCard = ({
           </Link>
 
           <p className="text-xs text-gray-500">
-            <span className="mx-1">•</span>d by
+            <span className="mx-1">•</span>Posted by
             <Link href={`/u/${username}`}>
               <a className="mx-1 hover:underline">/u/{username}</a>
             </Link>
