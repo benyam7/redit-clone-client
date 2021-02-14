@@ -6,7 +6,9 @@ import Link from "next/link";
 import { Fragment } from "react";
 import classNames from "classnames";
 
+import { useAuthState } from "../context/auth";
 import Axios from "axios";
+import { useRouter } from "next/router";
 
 dayjs.extend(relativeTime);
 
@@ -37,8 +39,15 @@ const PostCard = ({
     username,
   },
 }: PostCardProps) => {
-  const vote = async (value) => {
+  // global state
+  const { authenticated } = useAuthState();
+
+  // utils
+  const router = useRouter();
+
+  const vote = async (value: number) => {
     try {
+      if (!authenticated) router.push("/login");
       const res = await Axios.post("/misc/vote/", {
         identitfier,
         slug,
