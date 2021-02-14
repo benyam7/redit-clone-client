@@ -11,6 +11,7 @@ import PostCard from "../../componets/PostCard";
 import { Sub } from "../../types";
 import { useAuthState } from "../../context/auth";
 import { type } from "os";
+import Sidebar from "../../componets/Sidebar";
 
 export default function SubPage() {
   // local state
@@ -141,6 +142,7 @@ export default function SubPage() {
           <div className="container flex w-full pt-4 mx-auto">
             <div className="container flex">
               <div className="w-3/5">{postsMarkup}</div>
+              <Sidebar sub={sub} />
             </div>
           </div>
         </Fragment>

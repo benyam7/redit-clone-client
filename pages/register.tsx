@@ -59,7 +59,9 @@ export default function Register() {
           <p className="mb-10 text-xs">
             By continuing, you agree to our User Agreement and Privacy Policy
           </p>
-
+          <small className="block font-medium text-red-600">
+            {errors.agreement}
+          </small>
           <form onSubmit={submitForm}>
             <div className="flex items-center mb-6">
               <input
@@ -72,9 +74,6 @@ export default function Register() {
               <label htmlFor="agreement" className="text-xs cursor-pointer">
                 I agree to get emails about cool stuff on Reddit
               </label>
-              <small className="block font-medium text-red-600">
-                {errors.agreement}
-              </small>
             </div>
 
             <InputGroup
