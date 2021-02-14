@@ -39,6 +39,7 @@ export interface Sub {
 }
 
 export interface Comment {
+  post?: Post;
   identifier: string;
   body: string;
   username: string;
