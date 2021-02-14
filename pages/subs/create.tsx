@@ -1,8 +1,9 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Axios from "axios";
 import classNames from "classnames";
+import { useRouter } from "next/router";
 
 export default function create() {
   const [name, setName] = useState("");
@@ -10,6 +11,20 @@ export default function create() {
   const [description, setDescription] = useState("");
 
   const [errors, setErrors] = useState<Partial<any>>({});
+
+  const router = useRouter();
+
+  const submitForm = async (event: FormEvent) => {
+    event.preventDefault();
+
+    try {
+      const res = await Axios.post("/subs", { name, title, description });
+      router.push(`/r/${res.data.name}`);
+    } catch (err) {
+      console.log(err);
+      setErrors(err.response.data);
+    }
+  };
   return (
     <div className="flex bg-white">
       <Head>
@@ -25,7 +40,7 @@ export default function create() {
         <div className="w-98">
           <h1 className="mb-2 text-lg font-medium">Create a Communtity</h1>
           <hr />
-          <form>
+          <form onSubmit={submitForm}>
             <div className="my-6">
               <p className="font-medium">Name</p>
               <p className="mb-2 text-xs text-gray-500">
@@ -72,7 +87,7 @@ export default function create() {
               <textarea
                 className={classNames(
                   "w-full p-3 border border-gray-200 rounded hover:border-gray-500",
-                  { "border-red-600": errors.name }
+                  { "border-red-600": errors.description }
                 )}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
