@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
       </div>
       {/* search */}
 
-      <div className="relative flex mx-auto bg-gray-100 border rounded item-center hover:border-blue-500 hover:bg-white">
+      <div className="relative flex items-center mx-auto bg-gray-100 border rounded hover:border-blue-500 hover:bg-white">
         <i className="pl-3 pr-3 text-gray-500 fas fa-search"></i>
         <input
           placeholder="SEARCH"
