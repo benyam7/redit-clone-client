@@ -12,6 +12,8 @@ import useSWR from "swr";
 import Sidebar from "../../../../componets/Sidebar";
 import { Post } from "../../../../types";
 import { useAuthState } from "../../../../context/auth";
+import React from "react";
+import ActionButton from "../../../../componets/ActionButton";
 
 dayjs.extend(relativeTime);
 
@@ -32,6 +34,10 @@ export default function PostPage() {
 
   const vote = async (value: number) => {
     if (!authenticated) router.push("/login");
+    // reset vote
+    if (value === post?.userVote) {
+      value = 0;
+    }
     try {
       const res = await Axios.post("/misc/vote/", {
         identitfier,
@@ -56,7 +62,7 @@ export default function PostPage() {
               {post && (
                 <div className="w-8 h-8 mr-2 overflow-hidden rounded-full">
                   <Image
-                    src={post.sub.imageUrl}
+                    src={post?.sub.imageUrl}
                     height={(8 * 16) / 4}
                     width={(8 * 16) / 4}
                   />
@@ -75,8 +81,8 @@ export default function PostPage() {
             {post && (
               <div className="flex">
                 {/* vote */}
-                {/* vote */}
-                <div className="w-10 py-3 text-center bg-gray-200 rounded-l">
+
+                <div className="w-10 py-3 text-center rounded-l">
                   {/* upvote */}
                   <div
                     onClick={() => vote(1)}
@@ -84,12 +90,12 @@ export default function PostPage() {
                   >
                     <i
                       className={classNames("icon-arrow-up", {
-                        "text-red-500": post.userVote === 1,
+                        "text-red-500": post?.userVote === 1,
                       })}
                     ></i>
                   </div>
                   {/* score */}
-                  <p className="text-xs font-bold">{post.voteScore}</p>
+                  <p className="text-xs font-bold">{post?.voteScore}</p>
                   {/* downvote */}
                   <div
                     onClick={() => vote(-1)}
@@ -97,9 +103,56 @@ export default function PostPage() {
                   >
                     <i
                       className={classNames("icon-arrow-down", {
-                        "text-blue-500": post.userVote === -1,
+                        "text-blue-500": post?.userVote === -1,
                       })}
                     ></i>
+                  </div>
+                </div>
+                <div className="p-2">
+                  <div className="flex items-center">
+                    <p className="text-xs text-gray-500">
+                      Posted by
+                      <Link href={`/u/${post?.username}`}>
+                        <a className="mx-1 hover:underline">
+                          /u/{post?.username}
+                        </a>
+                      </Link>
+                      <Link href={post?.url}>
+                        <a className="mx-1 hover:underline">
+                          {dayjs(post?.createdAt).fromNow()}
+                        </a>
+                      </Link>
+                    </p>
+                  </div>
+                  {/* post title */}
+                  <h1 className="my-1 text-xl font-medium">{post?.title}</h1>
+                  {/* post body */}
+                  <p className="my-3 text-sm">{post?.body}</p>
+                  {/* action buttons */}
+                  <div className="flex">
+                    <Link href={post?.url}>
+                      <a>
+                        <ActionButton>
+                          <i className="fas fa-comment-alt fa-xs">
+                            <span className="ml-1 font-bold">
+                              {post?.commentCount} Comments
+                            </span>
+                          </i>
+                        </ActionButton>
+                      </a>
+                    </Link>
+
+                    <ActionButton>
+                      <i className="fas fa-share fa-xs">
+                        <span className="ml-1 font-bold">Share </span>
+                      </i>
+                    </ActionButton>
+
+                    <ActionButton>
+                      <i className="fas fa-bookmark fa-xs">
+                        <span className="ml-1 font-bold">Save</span>
+                      </i>
+                    </ActionButton>
                   </div>
                 </div>
               </div>
