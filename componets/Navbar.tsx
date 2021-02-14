@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import RedditLogo from "../public/images/reddit.svg";
 import { useAuthState, useAuthDispatch } from "../context/auth";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Axios from "axios";
 import { Sub } from "../types";
 import Image from "next/image";
@@ -12,6 +12,8 @@ export interface Props {}
 const Navbar: React.FC = () => {
   const [subName, setsubName] = useState("");
   const [subs, setSubs] = useState<Sub[]>([]);
+  const [timer, setTimer] = useState(null);
+
   const { authenticated, loading } = useAuthState();
   const dispatch = useAuthDispatch();
   const logout = () => {
@@ -24,16 +26,28 @@ const Navbar: React.FC = () => {
       .catch((err) => console.log(err)).finally;
   };
 
-  const searchSubs = async (subName: string) => {
-    setsubName(subName);
-
-    try {
-      const { data } = await Axios.get(`/subs/search/${subName}`);
-      setSubs(data);
-      console.log(data);
-    } catch (err) {
-      console.log(err);
+  useEffect(() => {
+    if (subName.trim() === "") {
+      setSubs([]);
+      return;
     }
+
+    searchSubs();
+  }, [subName]);
+
+  const searchSubs = async () => {
+    clearTimeout(timer);
+    setTimer(
+      setTimeout(async () => {
+        try {
+          const { data } = await Axios.get(`/subs/search/${subName}`);
+          setSubs(data);
+          console.log(data);
+        } catch (err) {
+          console.log(err);
+        }
+      }, 250)
+    );
   };
   return (
     <div className="fixed inset-x-0 top-0 z-10 flex items-center justify-center h-12 px-5 bg-white">
@@ -56,7 +70,7 @@ const Navbar: React.FC = () => {
           placeholder="SEARCH"
           type="text"
           value={subName}
-          onChange={(e) => searchSubs(e.target.value)}
+          onChange={(e) => setsubName(e.target.value)}
           className="pl-2.5 py-1 pr-3 rounded  bg-transparent w-96 focus:outline-none"
         />
         <div
