@@ -15,6 +15,7 @@ dayjs.extend(relativeTime);
 
 interface PostCardProps {
   post: Post;
+  revalidate?: Function;
 }
 
 const PostCard = ({
@@ -31,6 +32,7 @@ const PostCard = ({
     url,
     username,
   },
+  revalidate,
 }: PostCardProps) => {
   // global state
   const { authenticated } = useAuthState();
@@ -41,6 +43,8 @@ const PostCard = ({
   const vote = async (value: number) => {
     try {
       if (!authenticated) router.push("/login");
+
+      if (value === userVote) value = 0;
       // reset vote
       if (value === userVote) {
         value = 0;
@@ -50,6 +54,7 @@ const PostCard = ({
         slug,
         value,
       });
+      if (revalidate) revalidate();
     } catch (err) {
       console.log(err);
     }
@@ -102,8 +107,8 @@ const PostCard = ({
             </a>
           </Link>
 
-          <p className="text-xs text-gray-500">
-            <span className="mx-1">•</span>Posted by
+          <p className="hidden text-xs text-gray-500 md:block">
+            <span className="mx-1 ">•</span>Posted by
             <Link href={`/u/${username}`}>
               <a className="mx-1 hover:underline">/u/{username}</a>
             </Link>
