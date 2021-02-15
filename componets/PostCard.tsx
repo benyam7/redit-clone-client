@@ -30,6 +30,7 @@ const PostCard = ({
     userVote,
     commentCount,
     url,
+    sub,
     username,
   },
   revalidate,
@@ -39,6 +40,8 @@ const PostCard = ({
 
   // utils
   const router = useRouter();
+
+  const isInSubPage = router.pathname === "/r/[sub]";
 
   const vote = async (value: number) => {
     try {
@@ -95,20 +98,25 @@ const PostCard = ({
       {/* data */}
       <div className="w-full p-2">
         <div className="flex items-center">
-          <Link href={`/r/${subName}`}>
-            <img
-              className="w-6 h-6 mr-1 rounded-full cursor-pointer"
-              src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
-            />
-          </Link>
-          <Link href={`/r/${subName}`}>
-            <a className="text-xs font-bold cursor-pointer hover:underline">
-              /r/{subName}
-            </a>
-          </Link>
+          {!isInSubPage && (
+            <>
+              <Link href={`/r/${subName}`}>
+                <img
+                  className="w-6 h-6 mr-1 rounded-full cursor-pointer"
+                  src={sub.imageUrl}
+                />
+              </Link>
+              <Link href={`/r/${subName}`}>
+                <a className="text-xs font-bold cursor-pointer hover:underline">
+                  /r/{subName}
+                </a>
+              </Link>
+              <span className="mx-1 text-xs text-gray-500">•</span>
+            </>
+          )}
 
           <p className="hidden text-xs text-gray-500 md:block">
-            <span className="mx-1 ">•</span>Posted by
+            Posted by
             <Link href={`/u/${username}`}>
               <a className="mx-1 hover:underline">/u/{username}</a>
             </Link>

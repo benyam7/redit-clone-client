@@ -57,6 +57,8 @@ export default function Home(/* { posts } */) {
     revalidate,
   } = useSWRInfinite<Post[]>((index) => `/posts?page=${index}`);
 
+  const isIntialLoading = !data && !error;
+
   const posts: Post[] = data ? [].concat(...data) : [];
   const isLoadingInitialData = !data && !error;
 
@@ -81,7 +83,7 @@ export default function Home(/* { posts } */) {
       <div className="container flex w-full pt-4 mx-auto ">
         {/* posts */}
         <div className="w-full px-4 md:w-3/5 md:p-0">
-          {isValidating && <p className="text-lg text-center">Loading..</p>}
+          {isIntialLoading && <p className="text-lg text-center">Loading..</p>}
           {posts?.map((post) => (
             <PostCard
               post={post}
