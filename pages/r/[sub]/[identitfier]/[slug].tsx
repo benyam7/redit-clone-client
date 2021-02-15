@@ -12,7 +12,7 @@ import useSWR from "swr";
 import Sidebar from "../../../../componets/Sidebar";
 import { Post } from "../../../../types";
 import { useAuthState } from "../../../../context/auth";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import ActionButton from "../../../../componets/ActionButton";
 import { Comment } from "../../../../types";
 
@@ -21,6 +21,7 @@ dayjs.extend(relativeTime);
 export default function PostPage() {
   // local state
   const [newComment, setNewComment] = useState("");
+  const [description, setdescription] = useState("");
   // global state
   const { authenticated, user } = useAuthState();
 
@@ -31,6 +32,15 @@ export default function PostPage() {
   const { data: post, error } = useSWR<Post>(
     identitfier && slug ? `/posts/${identitfier}/${slug}` : null
   );
+
+  useEffect(() => {
+    if (!post) return;
+    let desc = post.body || post.title;
+
+    desc = desc.substring(0, 158).concat("..");
+
+    setdescription(desc);
+  }, [post]);
 
   const { data: comments, revalidate } = useSWR<Comment[]>(
     identitfier && slug ? `/posts/${identitfier}/${slug}/comments` : null
@@ -78,6 +88,12 @@ export default function PostPage() {
     <>
       <Head>
         <title>{post?.title}</title>
+        <meta name="description" content={description}></meta>
+        <meta name="og:description" content={description}></meta>
+        <meta property="og:title" content={post?.title}></meta>
+
+        <meta property="twitter:title" content={post?.title}></meta>
+        <meta property="twitter:description" content={description}></meta>
       </Head>
 
       <Link href={`/r/${sub}`}>

@@ -25,6 +25,9 @@ export default function Home(/* { posts } */) {
 
   const [observedPost, setObservedPost] = useState("");
 
+  const title = "reddit: the front page of the internet";
+  const description =
+    "Reddit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!";
   // const { data: posts } = useSWR<Post[]>("/posts");
   const { data: topSubs } = useSWR<Sub[]>("/misc/top-subs");
 
@@ -76,8 +79,14 @@ export default function Home(/* { posts } */) {
   return (
     <Fragment>
       <Head>
-        <title>reddit: the front page of the internet</title>
+        <title>{title}</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta name="description" content={description}></meta>
+        <meta name="og:description" content={description}></meta>
+        <meta property="og:title" content={title}></meta>
+
+        <meta property="twitter:title" content={title}></meta>
+        <meta property="twitter:description" content={description}></meta>
       </Head>
 
       <div className="container flex w-full pt-4 mx-auto ">
