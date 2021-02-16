@@ -1,6 +1,6 @@
 
-# Redit clone server 
-server app for reddit clone :). Made with ❤
+# Redit clone client 
+client app for reddit clone :). Made with ❤
 
 # Demo
 ![Reddit clone demo](demo/red-demo.gif)
